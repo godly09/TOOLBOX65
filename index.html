@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox - Your Multi-Tool Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #5a67d8;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: #5a67d8;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: #4c51bf;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .homepage {
+            display: block;
+        }
+
+        .tool-page {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-title {
+            color: #5a67d8;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Tool-specific styles */
+        .calc-display {
+            background: #2d3748;
+            color: white;
+            font-size: 1.5rem;
+            text-align: right;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calc-btn {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calc-btn:hover {
+            background: #2d3748;
+        }
+
+        .calc-btn.operator {
+            background: #5a67d8;
+        }
+
+        .calc-btn.operator:hover {
+            background: #4c51bf;
+        }
+
+        .calc-btn.clear {
+            background: #e53e3e;
+        }
+
+        .calc-btn.clear:hover {
+            background: #c53030;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #5a67d8;
+        }
+
+        .btn {
+            background: #5a67d8;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #4c51bf;
+        }
+
+        .result {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            margin-top: 0.5rem;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            text-align: center;
+            color: #5a67d8;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .timer-controls button {
+            flex: 1;
+        }
+
+        .qr-output {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧰 ToolBox</h1>
+        <button class="back-btn" id="backBtn" onclick="goHome()">← Back to Tools</button>
+    </div>
+
+    <div class="container">
+        <!-- Homepage -->
+        <div id="homepage" class="homepage">
+            <div class="hero">
+                <h2>Your All-in-One Tool Collection</h2>
+                <p>Choose a tool below to get started</p>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card" onclick="openTool('calculator')">
+                    <div class="tool-icon">🔢</div>
+                    <h3 class="tool-title">Calculator</h3>
+                    <p class="tool-description">Perform basic and advanced mathematical calculations with ease</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('converter')">
+                    <div class="tool-icon">📏</div>
+                    <h3 class="tool-title">Unit Converter</h3>
+                    <p class="tool-description">Convert between different units of length, weight, temperature, and volume</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('text')">
+                    <div class="tool-icon">📝</div>
+                    <h3 class="tool-title">Text Tools</h3>
+                    <p class="tool-description">Count words, characters, and transform text case instantly</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('color')">
+                    <div class="tool-icon">🎨</div>
+                    <h3 class="tool-title">Color Tools</h3>
+                    <p class="tool-description">Pick colors and convert between hex, RGB, and HSL formats</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('timer')">
+                    <div class="tool-icon">⏱️</div>
+                    <h3 class="tool-title">Timer & Stopwatch</h3>
+                    <p class="tool-description">Set countdown timers or use the stopwatch for time tracking</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('random')">
+                    <div class="tool-icon">🎲</div>
+                    <h3 class="tool-title">Random Generator</h3>
+                    <p class="tool-description">Generate random numbers within any specified range</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('qr')">
+                    <div class="tool-icon">📱</div>
+                    <h3 class="tool-title">QR Code Generator</h3>
+                    <p class="tool-description">Create QR codes from any text or URL for easy sharing</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('percentage')">
+                    <div class="tool-icon">📊</div>
+                    <h3 class="tool-title">Percentage Calculator</h3>
+                    <p class="tool-description">Calculate percentages, tips, discounts, and more</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('compress')">
+                    <div class="tool-icon">🖼️</div>
+                    <h3 class="tool-title">Image & Video Compressor</h3>
+                    <p class="tool-description">Optimize your media files to reduce their size without losing quality</p>
+                </div>
+
+                <div class="tool-card" onclick="openTool('timezone')">
+                    <div class="tool-icon">🌐</div>
+                    <h3 class="tool-title">Timezone Converter</h3>
+                    <p class="tool-description">Easily convert times between different timezones around the world</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Tool -->
+        <div id="calculator" class="tool-page">
+            <h3 class="tool-title">🔢 Calculator</h3>
+            <div class="calc-display" id="calcDisplay">0</div>
+            <div class="calc-buttons">
+                <button class="calc-btn clear" onclick="clearCalc()">C</button>
+                <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+                <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+                <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                <button class="calc-btn operator" onclick="calculate()" style="grid-row: span 2">=</button>
+                <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2">0</button>
+                <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+            </div>
+        </div>
+
+        <!-- Unit Converter Tool -->
+        <div id="converter" class="tool-page">
+            <h3 class="tool-title">📏 Unit Converter</h3>
+            <div class="input-group">
+                <label>Conversion Type:</label>
+                <select id="conversionType" onchange="updateUnitOptions()">
+                    <option value="length">Length</option>
+                    <option value="weight">Weight</option>
+                    <option value="temperature">Temperature</option>
+                    <option value="volume">Volume</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>From:</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="fromValue" placeholder="Enter value" style="flex: 2;" oninput="convertUnits()">
+                    <select id="fromUnit" style="flex: 1;" onchange="convertUnits()"></select>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>To:</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="toValue" readonly style="flex: 2;">
+                    <select id="toUnit" style="flex: 1;" onchange="convertUnits()"></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Tools -->
+        <div id="text" class="tool-page">
+            <h3 class="tool-title">📝 Text Tools</h3>
+            <div class="input-group">
+                <label>Enter your text:</label>
+                <textarea id="textInput" rows="6" placeholder="Type your text here..." oninput="analyzeText()"></textarea>
+            </div>
+            <div class="result" id="textResult">
+                Characters: 0 | Words: 0 | Lines: 0
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <button class="btn" onclick="transformText('upper')" style="width: auto; flex: 1;">UPPERCASE</button>
+                <button class="btn" onclick="transformText('lower')" style="width: auto; flex: 1;">lowercase</button>
+                <button class="btn" onclick="transformText('title')" style="width: auto; flex: 1;">Title Case</button>
+            </div>
+        </div>
+
+        <!-- Color Tools -->
+        <div id="color" class="tool-page">
+            <h3 class="tool-title">🎨 Color Tools</h3>
+            <div class="input-group">
+                <label>Color Picker:</label>
+                <input type="color" id="colorPicker" value="#5a67d8" onchange="updateColorInfo()">
+                <div class="color-preview" id="colorPreview"></div>
+            </div>
+            <div class="input-group">
+                <label>Hex Code:</label>
+                <input type="text" id="hexInput" placeholder="#000000" oninput="updateFromHex()">
+            </div>
+            <div class="result" id="colorResult">
+                RGB: rgb(90, 103, 216)<br>
+                HSL: hsl(232, 62%, 60%)
+            </div>
+        </div>
+
+        <!-- Timer & Stopwatch -->
+        <div id="timer" class="tool-page">
+            <h3 class="tool-title">⏱️ Timer & Stopwatch</h3>
+            <div class="timer-display" id="timerDisplay">00:00:00</div>
+            <div class="input-group">
+                <label>Set Timer (minutes):</label>
+                <input type="number" id="timerMinutes" placeholder="5" min="0">
+            </div>
+            <div class="timer-controls">
+                <button class="btn" onclick="startTimer()">Start Timer</button>
+                <button class="btn" onclick="startStopwatch()">Start Stopwatch</button>
+                <button class="btn" onclick="stopTimer()">Stop</button>
+                <button class="btn" onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Random Number Generator -->
+        <div id="random" class="tool-page">
+            <h3 class="tool-title">🎲 Random Number Generator</h3>
+            <div class="input-group">
+                <label>Minimum:</label>
+                <input type="number" id="randomMin" value="1">
+            </div>
+            <div class="input-group">
+                <label>Maximum:</label>
+                <input type="number" id="randomMax" value="100">
+            </div>
+            <button class="btn" onclick="generateRandom()">Generate Random Number</button>
+            <div class="result" id="randomResult">Click generate to get a random number</div>
+        </div>
+
+        <!-- QR Code Generator -->
+        <div id="qr" class="tool-page">
+            <h3 class="tool-title">📱 QR Code Generator</h3>
+            <div class="input-group">
+                <label>Text or URL:</label>
+                <input type="text" id="qrInput" placeholder="Enter text or URL">
+            </div>
+            <button class="btn" onclick="generateQR()">Generate QR Code</button>
+            <div class="qr-output" id="qrOutput">
+                QR code will appear here
+            </div>
+        </div>
+
+        <!-- Percentage Calculator -->
+        <div id="percentage" class="tool-page">
+            <h3 class="tool-title">📊 Percentage Calculator</h3>
+            <div class="input-group">
+                <label>What is</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="number" id="percentValue" placeholder="20" style="flex: 1;">
+                    <span>% of</span>
+                    <input type="number" id="percentTotal" placeholder="100" style="flex: 1;">
+                </div>
+            </div>
+            <button class="btn" onclick="calculatePercentage()">Calculate</button>
+            <div class="result" id="percentResult">Enter values to calculate percentage</div>
+        </div>
+        
+        <!-- Image & Video Compressor -->
+        <div id="compress" class="tool-page" style="max-width: 1000px; padding: 1.5rem;">
+            <h3 class="tool-title">🖼️ Image & Video Compressor</h3>
+            <p style="margin-bottom: 1rem; color: #666;">A simple tool to compress your media files. This service is embedded from an external application.</p>
+            <iframe src="https://studio--shrinkray-xtdux.us-central1.hosted.app/" style="width: 100%; height: 70vh; border: 1px solid #e2e8f0; border-radius: 8px;"></iframe>
+        </div>
+
+        <!-- Timezone Converter -->
+        <div id="timezone" class="tool-page" style="max-width: 1000px; padding: 1.5rem;">
+            <h3 class="tool-title">🌐 Timezone Converter</h3>
+            <p style="margin-bottom: 1rem; color: #666;">Convert time across different global timezones. This service is embedded from an external application.</p>
+            <iframe src="https://studio--chronosync-f75lt.us-central1.hosted.app/" style="width: 100%; height: 70vh; border: 1px solid #e2e8f0; border-radius: 8px;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function openTool(toolName) {
+            document.getElementById('homepage').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'block';
+            
+            // Hide all tool pages
+            const toolPages = document.querySelectorAll('.tool-page');
+            toolPages.forEach(page => page.style.display = 'none');
+            
+            // Show selected tool
+            document.getElementById(toolName).style.display = 'block';
+            
+            // Initialize tool-specific functions
+            if (toolName === 'converter') updateUnitOptions();
+            if (toolName === 'color') updateColorInfo();
+            if (toolName === 'timer') updateTimerDisplay();
+        }
+
+        function goHome() {
+            document.getElementById('homepage').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'none';
+            
+            // Hide all tool pages
+            const toolPages = document.querySelectorAll('.tool-page');
+            toolPages.forEach(page => page.style.display = 'none');
+        }
+
+        // Calculator functionality
+        let currentInput = '0';
+        let shouldResetDisplay = false;
+
+        function appendToCalc(value) {
+            const calcDisplay = document.getElementById('calcDisplay');
+            if (shouldResetDisplay) {
+                currentInput = '';
+                shouldResetDisplay = false;
+            }
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else {
+                currentInput += value;
+            }
+            calcDisplay.textContent = currentInput;
+        }
+
+        function clearCalc() {
+            currentInput = '0';
+            document.getElementById('calcDisplay').textContent = currentInput;
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === '') currentInput = '0';
+            document.getElementById('calcDisplay').textContent = currentInput;
+        }
+
+        function calculate() {
+            try {
+                let result = eval(currentInput.replace('×', '*'));
+                currentInput = result.toString();
+                document.getElementById('calcDisplay').textContent = currentInput;
+                shouldResetDisplay = true;
+            } catch (error) {
+                document.getElementById('calcDisplay').textContent = 'Error';
+                currentInput = '0';
+            }
+        }
+
+        // Unit Converter
+        const units = {
+            length: {
+                meter: 1,
+                kilometer: 1000,
+                centimeter: 0.01,
+                millimeter: 0.001,
+                inch: 0.0254,
+                foot: 0.3048,
+                yard: 0.9144,
+                mile: 1609.34
+            },
+            weight: {
+                kilogram: 1,
+                gram: 0.001,
+                pound: 0.453592,
+                ounce: 0.0283495,
+                ton: 1000
+            },
+            temperature: {
+                celsius: (val, to) => to === 'fahrenheit' ? (val * 9/5) + 32 : to === 'kelvin' ? val + 273.15 : val,
+                fahrenheit: (val, to) => to === 'celsius' ? (val - 32) * 5/9 : to === 'kelvin' ? (val - 32) * 5/9 + 273.15 : val,
+                kelvin: (val, to) => to === 'celsius' ? val - 273.15 : to === 'fahrenheit' ? (val - 273.15) * 9/5 + 32 : val
+            },
+            volume: {
+                liter: 1,
+                milliliter: 0.001,
+                gallon: 3.78541,
+                quart: 0.946353,
+                pint: 0.473176,
+                cup: 0.236588,
+                fluid_ounce: 0.0295735
+            }
+        };
+
+        function updateUnitOptions() {
+            const type = document.getElementById('conversionType').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            Object.keys(units[type]).forEach(unit => {
+                fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+                toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+            });
+            
+            convertUnits();
+        }
+
+        function convertUnits() {
+            const type = document.getElementById('conversionType').value;
+            const fromValue = parseFloat(document.getElementById('fromValue').value) || 0;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            
+            let result;
+            
+            if (type === 'temperature') {
+                result = units[type][fromUnit](fromValue, toUnit);
+            } else {
+                const baseValue = fromValue * units[type][fromUnit];
+                result = baseValue / units[type][toUnit];
+            }
+            
+            document.getElementById('toValue').value = result.toFixed(6).replace(/\.?0+$/, '');
+        }
+
+        // Text Tools
+        function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            const chars = text.length;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const lines = text.split('\n').length;
+            
+            document.getElementById('textResult').innerHTML = 
+                `Characters: ${chars} | Words: ${words} | Lines: ${lines}`;
+        }
+
+        function transformText(type) {
+            const textArea = document.getElementById('textInput');
+            let text = textArea.value;
+            
+            switch(type) {
+                case 'upper':
+                    textArea.value = text.toUpperCase();
+                    break;
+                case 'lower':
+                    textArea.value = text.toLowerCase();
+                    break;
+                case 'title':
+                    textArea.value = text.replace(/\w\S*/g, (txt) => 
+                        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                    break;
+            }
+            analyzeText();
+        }
+
+        // Color Tools
+        function updateColorInfo() {
+            const color = document.getElementById('colorPicker').value;
+            document.getElementById('colorPreview').style.backgroundColor = color;
+            document.getElementById('hexInput').value = color;
+            
+            const r = parseInt(color.substr(1, 2), 16);
+            const g = parseInt(color.substr(3, 2), 16);
+            const b = parseInt(color.substr(5, 2), 16);
+            
+            const hsl = rgbToHsl(r, g, b);
+            
+            document.getElementById('colorResult').innerHTML = 
+                `RGB: rgb(${r}, ${g}, ${b})<br>HSL: hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+        }
+
+        function updateFromHex() {
+            const hex = document.getElementById('hexInput').value;
+            if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                document.getElementById('colorPicker').value = hex;
+                updateColorInfo();
+            }
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+
+            return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+        }
+
+        // Timer functionality
+        let timerInterval;
+        let timerSeconds = 0;
+        let isStopwatch = false;
+
+        function startTimer() {
+            const minutes = parseInt(document.getElementById('timerMinutes').value) || 0;
+            timerSeconds = minutes * 60;
+            isStopwatch = false;
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Timer finished!');
+                    return;
+                }
+                timerSeconds--;
+                updateTimerDisplay();
+            }, 1000);
+            updateTimerDisplay();
+        }
+
+        function startStopwatch() {
+            timerSeconds = 0;
+            isStopwatch = true;
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+            updateTimerDisplay();
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerSeconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            document.getElementById('timerDisplay').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Random Number Generator
+        function generateRandom() {
+            const min = parseInt(document.getElementById('randomMin').value) || 0;
+            const max = parseInt(document.getElementById('randomMax').value) || 100;
+            const random = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            document.getElementById('randomResult').textContent = 
+                `Random number: ${random}`;
+        }
+
+        // QR Code Generator
+        function generateQR() {
+            const text = document.getElementById('qrInput').value;
+            if (!text) {
+                document.getElementById('qrOutput').innerHTML = 'Please enter text or URL';
+                return;
+            }
+            
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
+            document.getElementById('qrOutput').innerHTML = 
+                `<img src="${qrUrl}" alt="QR Code" style="max-width: 100%; border-radius: 8px;">`;
+        }
+
+        // Percentage Calculator
+        function calculatePercentage() {
+            const percent = parseFloat(document.getElementById('percentValue').value) || 0;
+            const total = parseFloat(document.getElementById('percentTotal').value) || 0;
+            const result = (percent / 100) * total;
+            
+            document.getElementById('percentResult').textContent = 
+                `${percent}% of ${total} = ${result.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
